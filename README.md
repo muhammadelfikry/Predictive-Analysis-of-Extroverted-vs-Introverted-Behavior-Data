@@ -6,7 +6,7 @@
 
 *Personality classification* merupakan salah satu aplikasi penting dalam bidang psikologi, pemasaran, pendidikan, dan sumber daya manusia. Salah satu pendekatan yang sering digunakan dalam klasifikasi kepribadian adalah dengan membedakan antara *introvert* dan *extrovert*. Kepribadian ini mempengaruhi cara seseorang berperilaku, membuat keputusan, dan berinteraksi dengan lingkungan sosialnya.
 
-Dengan meningkatnya aktivitas daring dan penggunaan media sosial, terdapat peluang besar untuk mengamati perilaku digital seseorang dan menggunakannya sebagai indikator tipe kepribadian. Oleh karena itu, membangun model machine learning untuk memprediksi kepribadian berdasarkan perilaku dapat membantu banyak organisasi dalam memahami pengguna atau klien mereka.
+Dengan meningkatnya aktivitas daring dan penggunaan media sosial, terdapat peluang besar untuk mengamati perilaku digital seseorang dan menggunakannya sebagai indikator tipe kepribadian. Oleh karena itu, membangun model *machine learning* untuk memprediksi kepribadian berdasarkan perilaku dapat membantu banyak organisasi dalam memahami pengguna atau klien mereka.
 
 **Mengapa masalah ini penting?**
 - Dalam HR dan rekrutmen, dapat membantu dalam *job matching*.
@@ -18,7 +18,7 @@ Dengan meningkatnya aktivitas daring dan penggunaan media sosial, terdapat pelua
 2. Grant, A. M. (2013). Give and Take: A Revolutionary Approach to Success.
 3. Amichai-Hamburger, Y. (2002). Internet and personality. Computers in Human Behavior, 18(1), 1–10. https://doi.org/10.1016/S0747-5632(01)00034-6
 
-## Business Understanding
+## *Business Understanding*
 
 ### Problem Statements
 
@@ -42,7 +42,7 @@ Dengan meningkatnya aktivitas daring dan penggunaan media sosial, terdapat pelua
 *Dataset* yang digunakan berasal dari Kaggle dan dapat diakses melalui tautan berikut:
 [Kaggle](https://www.kaggle.com/datasets/rakeshkapilavai/extrovert-vs-introvert-behavior-data).
 
-Dataset ini terdiri dari tujuh fitur dan satu label target yang menunjukkan apakah seseorang adalah *extrovert* atau *introvert*.
+Dataset ini terdiri dari 2,900 baris data dengan tujuh fitur dan satu label target yang menunjukkan apakah seseorang adalah *extrovert* atau *introvert*.
 
 ### Variabel-variabel pada Extrovert vs Introvert Behavior Data dataset:
 - *Time_spent_Alone*: Jam yang dihabiskan sendirian setiap hari (0–11).
@@ -56,15 +56,28 @@ Dataset ini terdiri dari tujuh fitur dan satu label target yang menunjukkan apak
 
 ### Exploratory Data Analysis (EDA)
 - Visualisasi distribusi target class (*introvert vs extrovert*).
-![image](https://github.com/user-attachments/assets/1207656b-98ef-47d6-a71b-45a3afe2ccf7)
+  
+  ![image](https://github.com/user-attachments/assets/1207656b-98ef-47d6-a71b-45a3afe2ccf7)
 
-
+  Gambar 1. Distribusi Target.
+  
+  Pada Gambar 1, Distribusi target pada dataset didominasi oleh label *Extrovert*.
+   
 - Analisis korelasi antar fitur dengan *heatmap*.
-![image](https://github.com/user-attachments/assets/3a826741-ed12-4397-8b87-a0862ca52194)
+  
+  ![image](https://github.com/user-attachments/assets/3a826741-ed12-4397-8b87-a0862ca52194)
+
+  Gambar 2. Korelasi fitur.
+
+  Pada Gambar 2, Gambar heatmap menunjukkan bahwa semakin sering seseorang menghabiskan waktu sendirian, semakin rendah tingkat keaktifannya dalam aktivitas sosial, bergaul, dan frekuensi unggahan, dengan hubungan negatif yang kuat antar variabel tersebut.
 
 - Visualisasi preferensi kegiatan (seperti *Social_event_attendance, Post_frequency*) antara *introvert* dan *extrovert*.
-![image](https://github.com/user-attachments/assets/c16438b0-213f-434f-a958-d9e887d03e7f)
+  
+  ![image](https://github.com/user-attachments/assets/c16438b0-213f-434f-a958-d9e887d03e7f)
 
+  Gambar 3. Hubungan fitur numerik terhadap target.
+
+  Pada Gambar 3, kepribadian ekstrovert cenderung lebih sering berinteraksi sosial—seperti menghadiri acara, keluar rumah, memiliki lingkaran pertemanan besar, dan sering memposting—sementara orang introvert lebih banyak menghabiskan waktu sendirian.
 
 ## Data Preparation
 **Beberapa tahapan yang dilakukan dalam proses data preparation:**
@@ -92,6 +105,7 @@ Dataset ini terdiri dari tujuh fitur dan satu label target yang menunjukkan apak
 5. **Feature Scaling**: Fitur numerik dinormalisasi menggunakan **MinMaxScaler** agar setiap nilai berada dalam rentang 0 hingga 1, sehingga meminimalkan skala perbedaan antar fitur. *MinMaxScaler* mengubah nilai menjadi rentang 0–1, yang membantu mempercepat konvergensi saat pelatihan dan mencegah fitur dengan nilai besar mendominasi proses pembelajaran.
    ```
    min_max_scaler = MinMaxScaler()
+   
    X_train = min_max_scaler.fit_transform(X_train)
    X_test = min_max_scaler.transform(X_test)
    X_val = min_max_scaler.transform(X_val)
@@ -122,6 +136,10 @@ Model *Machine Learning* yang digunakan untuk menyelesaikan permasalahan ini ada
      - Rentan terhadap *overfitting*, terutama pada data kecil.
      - Keputusan sangat tergantung pada data latih (tidak stabil).
      - Performa bisa rendah jika tidak dilakukan pruning atau pengaturan parameter seperti *max_depth*.
+
+Nilai akurasi yang diperoleh dari pelatihan model terhadap data training dan validation menunjukkan sejauh mana model mampu belajar dan menggeneralisasi pola dari data.
+
+Tabel 1. Hasil akurasi dari pelatihan model terhadap data *training* dan *validation*.
     
 | Model         | Train Accuracy | Validation Accuracy |
 |---------------|----------------|---------------------|
@@ -130,7 +148,8 @@ Model *Machine Learning* yang digunakan untuk menyelesaikan permasalahan ini ada
 | SVM           | 0.911204       | 0.919048            |
 
 **Hyperparameter Tuning**
-Dilakukan tuning *hyperparameter* menggunakan *GridSearchCV* pada model SVM karena model ini memiliki nilai *validation accuracy* terbaik dibandingkan dua model lainnya.
+
+Dilakukan *tuning hyperparameter* menggunakan *GridSearchCV* pada model SVM karena model ini memiliki nilai *validation accuracy* terbaik dibandingkan dua model lainnya.
 ```
 param_grid = {
     "C": [0.1, 1, 10, 100],
@@ -160,12 +179,15 @@ Model dengan parameter tersebut mencapai skor akurasi validasi sebesar 0.9190, y
 ## Evaluation
 Evaluasi yang digunakan pada model SVM menggunakan *Classification Report* dan *Confusion Matrix* pada *Test Set*.
 *Classification report* melakukan evaluasi berdasarkan metrik berikut:
-- **Accuracy**: Tingkat keseluruhan prediksi yang benar.
-- **Precision**: Ketepatan model dalam memprediksi kelas positif.
-- **Recall**: Kemampuan model dalam menangkap semua data positif.
-- **F1-Score**: Rata-rata harmonis antara precision dan recall.
+- *Accuracy*: Tingkat keseluruhan prediksi yang benar.
+- *Precision*: Ketepatan model dalam memprediksi kelas positif.
+- *Recall*: Kemampuan model dalam menangkap semua data positif.
+- *F1-Score*: Rata-rata harmonis antara *precision* dan *recall*.
 
-**Hasil evaluasi pada data uji menunjukkan**:
+Evaluasi model pada data uji menunjukkan performa akhir model dalam mengklasifikasikan data yang belum pernah dilihat sebelumnya. Berdasarkan hasil evaluasi pada data uji, model mencapai akurasi sebesar 94%, dengan nilai *precision, recall*, dan *f1-score* yang seimbang, menunjukkan performa generalisasi yang baik.
+
+Tabel 2. Hasil evaluasi pada data uji.
+
 | Class         | Precision | Recall | F1-score | Support |
 |---------------|-----------|--------|----------|---------|
 | Extrovert     | 0.96      | 0.94   | 0.95     | 124     |
@@ -177,6 +199,10 @@ Evaluasi yang digunakan pada model SVM menggunakan *Classification Report* dan *
 *Confusion matrix* yang divisualisasikan dalam bentuk heatmap memperlihatkan distribusi antara prediksi yang benar dan yang salah secara jelas, sehingga memudahkan dalam menginterpretasikan jenis kesalahan klasifikasi yang terjadi dengan hasil sebagai berikut:
 
 ![image](https://github.com/user-attachments/assets/6c6df1ed-2f18-4f18-95fb-af7d356ef1ed)
+
+Gambar 4. *Confusion Matrix* hasil prediksi model pada data uji.
+
+Pada Gambar 4, Model memiliki kinerja klasifikasi yang sangat baik dengan akurasi tinggi, terbukti dari jumlah prediksi benar yang jauh lebih besar dibandingkan kesalahan, yaitu hanya 7 *false positive* dan 5 *false negative* dari total 210 data.
 
 **Kesimpulan Evaluasi**:
 
