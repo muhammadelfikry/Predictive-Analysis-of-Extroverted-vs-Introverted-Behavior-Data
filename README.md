@@ -42,7 +42,19 @@ Dengan meningkatnya aktivitas daring dan penggunaan media sosial, terdapat pelua
 *Dataset* yang digunakan berasal dari Kaggle dan dapat diakses melalui tautan berikut:
 [Kaggle](https://www.kaggle.com/datasets/rakeshkapilavai/extrovert-vs-introvert-behavior-data).
 
-Dataset ini terdiri dari 2,900 baris data dengan tujuh fitur dan satu label target yang menunjukkan apakah seseorang adalah *extrovert* atau *introvert*.
+Dataset ini terdiri dari 2,900 baris data dengan tujuh fitur dan satu label target yang menunjukkan apakah seseorang adalah *extrovert* atau *introvert*. Dataset yang digunakan mengandung 458 *missing values* dan 388 entri duplikat, yang perlu ditangani untuk memastikan kualitas data yang optimal sebelum pelatihan model. Pemeriksaan terhadap *missing value* dan data duplikat dilakukan menggunakan kode berikut:
+
+```python
+print("Total missing value: ", data.isnull().sum().sum())
+print("Total duplicate: ", data.duplicated().sum())
+```
+
+output:
+
+```text
+Total missing value:  458
+Total duplicate:  388
+```
 
 ### Variabel-variabel pada Extrovert vs Introvert Behavior Data dataset:
 - *Time_spent_Alone*: Jam yang dihabiskan sendirian setiap hari (0–11).
@@ -63,38 +75,57 @@ Dataset ini terdiri dari 2,900 baris data dengan tujuh fitur dan satu label targ
   
   Pada Gambar 1, Distribusi target pada dataset didominasi oleh label *Extrovert*.
    
-- Analisis korelasi antar fitur dengan *heatmap*.
-  
-  ![image](https://github.com/user-attachments/assets/3a826741-ed12-4397-8b87-a0862ca52194)
-
-  Gambar 2. Korelasi fitur.
-
-  Pada Gambar 2, Gambar heatmap menunjukkan bahwa semakin sering seseorang menghabiskan waktu sendirian, semakin rendah tingkat keaktifannya dalam aktivitas sosial, bergaul, dan frekuensi unggahan, dengan hubungan negatif yang kuat antar variabel tersebut.
-
 - Visualisasi preferensi kegiatan (seperti *Social_event_attendance, Post_frequency*) antara *introvert* dan *extrovert*.
   
   ![image](https://github.com/user-attachments/assets/c16438b0-213f-434f-a958-d9e887d03e7f)
 
-  Gambar 3. Hubungan fitur numerik terhadap target.
+  Gambar 2. Hubungan fitur numerik terhadap target.
 
-  Pada Gambar 3, kepribadian ekstrovert cenderung lebih sering berinteraksi sosial—seperti menghadiri acara, keluar rumah, memiliki lingkaran pertemanan besar, dan sering memposting—sementara orang introvert lebih banyak menghabiskan waktu sendirian.
+  Pada Gambar 2, kepribadian ekstrovert cenderung lebih sering berinteraksi sosial—seperti menghadiri acara, keluar rumah, memiliki lingkaran pertemanan besar, dan sering memposting—sementara orang introvert lebih banyak menghabiskan waktu sendirian.
+
+- Visualisasi scatter plot untuk setiap pasangan fitur.
+
+  ![image](https://github.com/user-attachments/assets/f75c1b9c-4732-4bff-bda8-c60673e4435a)
+
+  Gambar 3. Scatter plot untuk setiap pasangan fitur.
+
+  Pada gambar 3, terdapat perbedaan pola perilaku antara "Extrovert" dan "Introvert" dalam berbagai aspek interaksi sosial. Secara umum, ekstrover (biru) cenderung menunjukkan tingkat partisipasi yang lebih tinggi dalam aktivitas sosial seperti "Social_event_attendance", "Going_outside", dan "Friends_circle_size", serta mungkin memiliki "Post_frequency" yang lebih tinggi dan "Time_spent_Alone" yang lebih rendah dibandingkan dengan introver (hijau).
+  
+- Analisis korelasi antar fitur dengan *heatmap*.
+  
+  ![image](https://github.com/user-attachments/assets/3a826741-ed12-4397-8b87-a0862ca52194)
+
+  Gambar 4. Korelasi fitur.
+
+  Pada Gambar 4, Gambar heatmap menunjukkan bahwa semakin sering seseorang menghabiskan waktu sendirian, semakin rendah tingkat keaktifannya dalam aktivitas sosial, bergaul, dan frekuensi unggahan, dengan hubungan negatif yang kuat antar variabel tersebut.
+
 
 ## Data Preparation
 **Beberapa tahapan yang dilakukan dalam proses data preparation:**
 1. **Handling Missing and Duplicate Values**: Dataset dicek dan dibersihkan dari nilai kosong dan duplikat. Nilai kosong (*missing values*) dapat menyebabkan *error* saat pelatihan model atau membuat model belajar pola yang salah. Duplikat data dapat menyebabkan bias dalam pelatihan, karena model bisa terlalu mempelajari informasi yang berulang, sehingga mengurangi generalisasi terhadap data baru.
-   ```
+   
+   ```python
    data.dropna(inplace=True)
    data.drop_duplicates(inplace=True)
    ```
+
+   output:
+   
+   ```text
+   Total missing value:  0
+   Total duplicate:  0
+   ```
    
 3. **Label Encoding**: Fitur kategorikal seperti *Stage_fear* dan *Drained_after_socializing* diubah ke dalam bentuk numerik menggunakan teknik *One-hot Encoding*. *One-hot Encoding* digunakan untuk menghindari asumsi urutan atau besaran pada fitur kategorikal. Teknik ini menciptakan kolom biner untuk setiap kategori, sehingga tidak ada informasi ordinal yang salah diterapkan oleh model.
-   ```
+   
+   ```python
    feature_to_encode = ["Stage_fear", "Drained_after_socializing"]
    data_encoding = pd.get_dummies(data, columns=feature_to_encode)
    ```
    
-4. **Split Dataset**: Dataset dibagi ke dalam tiga bagian: *train set, validation set*, dan *test set*, yang masing-masing digunakan untuk pelatihan, validasi, dan pengujian model.
-   ```
+5. **Split Dataset**: Dataset dibagi ke dalam tiga bagian: *train set, validation set*, dan *test set*, yang masing-masing digunakan untuk pelatihan, validasi, dan pengujian model.
+   
+   ```python
    x = data_encoding.drop(["Personality"], axis=1)
    y = data_encoding["Personality"]
     
@@ -102,8 +133,9 @@ Dataset ini terdiri dari 2,900 baris data dengan tujuh fitur dan satu label targ
    X_test, X_val, y_test, y_val = train_test_split(X_test, y_test, test_size=0.5, random_state=42)
    ```
    
-5. **Feature Scaling**: Fitur numerik dinormalisasi menggunakan **MinMaxScaler** agar setiap nilai berada dalam rentang 0 hingga 1, sehingga meminimalkan skala perbedaan antar fitur. *MinMaxScaler* mengubah nilai menjadi rentang 0–1, yang membantu mempercepat konvergensi saat pelatihan dan mencegah fitur dengan nilai besar mendominasi proses pembelajaran.
-   ```
+7. **Feature Scaling**: Fitur numerik dinormalisasi menggunakan **MinMaxScaler** agar setiap nilai berada dalam rentang 0 hingga 1, sehingga meminimalkan skala perbedaan antar fitur. *MinMaxScaler* mengubah nilai menjadi rentang 0–1, yang membantu mempercepat konvergensi saat pelatihan dan mencegah fitur dengan nilai besar mendominasi proses pembelajaran.
+   
+   ```python
    min_max_scaler = MinMaxScaler()
    
    X_train = min_max_scaler.fit_transform(X_train)
@@ -150,7 +182,8 @@ Tabel 1. Hasil akurasi dari pelatihan model terhadap data *training* dan *valida
 **Hyperparameter Tuning**
 
 Dilakukan *tuning hyperparameter* menggunakan *GridSearchCV* pada model SVM karena model ini memiliki nilai *validation accuracy* terbaik dibandingkan dua model lainnya.
-```
+
+```python
 param_grid = {
     "C": [0.1, 1, 10, 100],
     "gamma": ["auto", "scale", 0.01, 0.001],
@@ -171,7 +204,8 @@ grid_search.fit(X_train, y_train)
 
 Proses *GridSearchCV* dilakukan dengan *5-fold cross-validation* untuk mengevaluasi total 240 kombinasi *hyperparameter*.
 Hasil terbaik diperoleh dengan parameter:
-```
+
+```text
 {'C': 0.1, 'gamma': 'auto', 'kernel': 'linear'}
 ```
 Model dengan parameter tersebut mencapai skor akurasi validasi sebesar 0.9190, yang hanya menunjukkan perubahan kecil dibandingkan sebelum dilakukan *hyperparameter tuning*.
