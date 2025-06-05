@@ -18,7 +18,7 @@ Dengan meningkatnya aktivitas daring dan penggunaan media sosial, terdapat pelua
 2. Grant, A. M. (2013). Give and Take: A Revolutionary Approach to Success.
 3. Amichai-Hamburger, Y. (2002). Internet and personality. Computers in Human Behavior, 18(1), 1–10. https://doi.org/10.1016/S0747-5632(01)00034-6
 
-## *Business Understanding*
+## Business Understanding
 
 ### Problem Statements
 
@@ -240,4 +240,11 @@ Pada Gambar 4, Model memiliki kinerja klasifikasi yang sangat baik dengan akuras
 
 **Kesimpulan Evaluasi**:
 
-Model SVM menunjukkan performa yang sangat baik dalam membedakan antara kelas *Extrovert* dan *Introvert*, dengan nilai akurasi sebesar 94%. Nilai *precision* dan *recall* yang seimbang pada kedua kelas mengindikasikan bahwa model tidak hanya akurat, tetapi juga andal dalam menangani distribusi kelas yang mungkin tidak seimbang. Dengan *f1-score* yang tinggi, model ini dinilai cocok untuk digunakan pada data serupa dalam konteks klasifikasi kepribadian.
+Model SVM menunjukkan performa yang sangat baik dalam membedakan antara kelas *Extrovert* dan *Introvert*, dengan nilai akurasi sebesar 94%. Nilai *precision* dan *recall* yang seimbang pada kedua kelas mengindikasikan bahwa model tidak hanya akurat, tetapi juga andal dalam menangani distribusi kelas yang mungkin tidak seimbang. Dengan *f1-score* yang tinggi, model ini dinilai cocok untuk digunakan pada data serupa dalam konteks klasifikasi kepribadian. Berdasarkan hasil *Exploratory Data Analysis* (EDA), fitur-fitur seperti:
+
+- *Social_event_attendance*
+- *Friends_circle_size*
+- *Post_frequency*
+- *Time_spent_Alone*
+
+menunjukkan perbedaan distribusi yang signifikan antara kedua tipe kepribadian. Individu dengan kepribadian ekstrovert cenderung memiliki nilai tinggi pada fitur yang berkaitan dengan interaksi sosial, sedangkan individu dengan kepribadian introvert lebih tinggi pada waktu yang dihabiskan sendirian. Secara keseluruhan, hasil yang diperoleh menunjukkan bahwa pendekatan machine learning dapat dimanfaatkan secara efektif untuk mengidentifikasi tipe kepribadian berdasarkan perilaku. Temuan ini diharapkan dapat menjadi dasar bagi pengembangan model serupa di masa depan, dengan cakupan data dan konteks yang lebih luas.
